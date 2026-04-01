@@ -1,14 +1,23 @@
-function login(event) {
+async function login(event) {
   event.preventDefault();
 
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-  // simulasi login (frontend only)
-  if (user === "admin" && pass === "12345") {
-    document.getElementById("message").style.color = "lightgreen";
-    document.getElementById("message").innerText = "Login berhasil!";
+  const res = await fetch("http://localhost:3000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    localStorage.setItem("token", data.token);
+    alert("Login berhasil");
   } else {
-    document.getElementById("message").innerText = "Username / Password salah!";
+    alert("Login gagal");
   }
 }
